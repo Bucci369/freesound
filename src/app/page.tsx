@@ -2,6 +2,7 @@
 
 import React, { useEffect, useCallback } from 'react';
 import { LoaderCircle } from 'lucide-react';
+import Image from 'next/image';
 import SampleCard from './components/SampleCard';
 import FilterSidebar from './components/FilterSidebar';
 import AuthButton from './components/AuthButton';
@@ -76,21 +77,35 @@ export default function HomePage() {
   return (
     <main className="min-h-screen bg-slate-900 text-white p-4 sm:p-8">
       <div className="max-w-7xl mx-auto">
-        <header className="text-center mb-12">
-          <div className="flex items-center justify-between">
-            <div></div> {/* Spacer */}
-            <div>
-              <h1 className="text-4xl sm:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600">
-                Freesound Explorer
-              </h1>
-              <p className="text-slate-400 mt-2">Entdecke und lade einzigartige Sounds.</p>
-            </div>
-            <div className="flex flex-col items-center">
-              <AuthButton />
-              <p className="text-xs text-slate-500 mt-2">Für Downloads in höchster Qualität anmelden.</p>
-            </div>
+        {/* Hero Section with Studio Photo */}
+        <section className="mb-8 rounded-2xl overflow-hidden">
+          <div className="relative">
+            <picture>
+              <source srcSet="/musicstudio.webp" type="image/webp" />
+              <Image 
+                src="/musicstudio.jpg" 
+                alt="Music Studio" 
+                width={1920}
+                height={600}
+                className="w-full h-[300px] sm:h-[400px] lg:h-[500px] object-cover object-top"
+                priority
+              />
+            </picture>
           </div>
-        </header>
+        </section>
+
+        {/* Content below photo */}
+        <div className="text-center mb-8 flex items-center justify-between">
+          <div></div> {/* Spacer */}
+          <div>
+            <p className="text-slate-400 text-lg sm:text-xl font-medium mb-2">Entdecke und lade einzigartige Sounds</p>
+            <p className="text-slate-500 text-sm">Professionelle Audio-Samples für deine Musikproduktion</p>
+          </div>
+          <div className="flex flex-col items-center">
+            <AuthButton />
+            <p className="text-xs text-slate-500 mt-2">Für Downloads in höchster Qualität anmelden.</p>
+          </div>
+        </div>
 
         <div className="grid lg:grid-cols-4 gap-8">
           {/* Linke Spalte: Filter */}
