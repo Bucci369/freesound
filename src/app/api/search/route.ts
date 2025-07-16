@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { FreesoundResponse, FreesoundError } from '@/types/sound';
+import { createClient } from '@/lib/supabase/server';
 
 interface SearchParams {
   query: string;
@@ -13,7 +14,8 @@ interface ApiErrorResponse {
 }
 
 export async function GET(request: NextRequest): Promise<NextResponse<FreesoundResponse | ApiErrorResponse>> {
-  const searchParams = request.nextUrl.searchParams;
+  const supabase = await createClient();
+  const { searchParams } = new URL(request.url);
   const query = searchParams.get('query');
   const filter = searchParams.get('filter');
   const page = searchParams.get('page') || '1';

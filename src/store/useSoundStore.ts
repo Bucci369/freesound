@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { SoundData, FreesoundResponse, SearchFilters, SearchState } from '@/types/sound';
+import { FreesoundResponse, SearchFilters, SearchState } from '@/types/sound';
 
 interface SoundStoreState extends SearchState {
   // Search actions

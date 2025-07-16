@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import Link from 'next/link';
+import { getCookie, setCookie } from 'cookies-next';
 
 const CookieConsent = () => {
   const [showConsent, setShowConsent] = useState(false);

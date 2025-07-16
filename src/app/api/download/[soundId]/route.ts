@@ -1,11 +1,14 @@
 import { createClient } from '@/lib/supabase/server';
-import { NextRequest, NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
 
 export async function GET(
   request: NextRequest,
   { params }: { params: { soundId: string } }
 ) {
   const supabase = await createClient();
+  if (!supabase) {
+    return new Response('Internal server error: Supabase client not initialized.', { status: 500 });
+  }
   const { data: { user } } = await supabase.auth.getUser();
 
   if (!user) {
