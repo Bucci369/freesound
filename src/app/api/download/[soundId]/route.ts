@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server';
 
 export async function GET(
   request: Request,
-  { params }: { params: { soundId: string } }
+  { params }: { params: Promise<{ soundId: string }> }
 ) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
@@ -24,7 +24,7 @@ export async function GET(
     return new Response('Could not retrieve Freesound token.', { status: 500 });
   }
 
-  const soundId = params.soundId;
+  const { soundId } = await params;
   const accessToken = profile.access_token;
 
   // Fetch the original download URL from Freesound
