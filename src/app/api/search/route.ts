@@ -1,4 +1,3 @@
-import { createClient } from '@/lib/supabase/server';
 import { type NextRequest, NextResponse } from 'next/server';
 import { FreesoundResponse, FreesoundError } from '@/types/sound';
 
@@ -8,7 +7,6 @@ interface ApiErrorResponse {
 }
 
 export async function GET(request: NextRequest): Promise<NextResponse<FreesoundResponse | ApiErrorResponse>> {
-  const supabase = createClient();
   const { searchParams } = new URL(request.url);
   const query = searchParams.get('query');
   const filter = searchParams.get('filter');
