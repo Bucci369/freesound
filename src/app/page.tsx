@@ -25,9 +25,17 @@ export default function HomePage() {
 
   // Trigger initial search when filters change
   useEffect(() => {
-    if (query.trim() || Object.values(filters).some(f => 
-      (typeof f === 'string' && f) || (typeof f === 'object' && (f.min || f.max))
-    )) {
+    const hasActiveFilters = 
+      filters.duration.min || filters.duration.max ||
+      filters.tempo.min || filters.tempo.max ||
+      filters.tonality ||
+      (filters.sampleType && filters.sampleType !== 'all') ||
+      (filters.fileType && filters.fileType !== 'all') ||
+      (filters.license && filters.license !== 'all') ||
+      filters.sampleRate.min || filters.sampleRate.max ||
+      (filters.channels && filters.channels !== 'all');
+    
+    if (query.trim() || hasActiveFilters) {
       const debounceTimeout = setTimeout(() => {
         fetchSounds(query, filters);
       }, 500);

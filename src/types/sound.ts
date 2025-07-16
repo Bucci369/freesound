@@ -72,6 +72,14 @@ export interface SearchFilters {
     min: string;
     max: string;
   };
+  sampleType: string; // 'all', 'loop', 'oneshot'
+  fileType: string; // 'all', 'wav', 'mp3', 'ogg', 'flac', 'aiff'
+  license: string; // 'all', 'cc0', 'ccby'
+  sampleRate: {
+    min: string;
+    max: string;
+  };
+  channels: string; // 'all', '1', '2'
 }
 
 export interface SearchState {

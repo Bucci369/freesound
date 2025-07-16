@@ -28,7 +28,14 @@ const WaveformPlayer: React.FC<WaveformPlayerProps> = ({ audioUrl }) => {
       wavesurfer.current.on('pause', () => setIsPlaying(false));
 
       return () => {
-        wavesurfer.current?.destroy();
+        if (wavesurfer.current) {
+          try {
+            wavesurfer.current.destroy();
+          } catch (error) {
+            // Ignore AbortError
+          }
+          wavesurfer.current = null;
+        }
       };
     }
   }, [audioUrl]);

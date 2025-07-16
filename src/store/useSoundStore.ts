@@ -29,6 +29,11 @@ const initialFilters: SearchFilters = {
   duration: { min: '', max: '' },
   tonality: '',
   tempo: { min: '', max: '' },
+  sampleType: 'all',
+  fileType: 'all',
+  license: 'all',
+  sampleRate: { min: '', max: '' },
+  channels: 'all',
 };
 
 export const useSoundStore = create<SoundStoreState>()(
@@ -107,6 +112,25 @@ export const useSoundStore = create<SoundStoreState>()(
           if (currentFilters.tonality) {
             filterParts.push(`ac_tonality:"${currentFilters.tonality}"`);
           }
+          if (currentFilters.sampleType === 'loop') {
+            filterParts.push(`tag:loop`);
+          } else if (currentFilters.sampleType === 'oneshot') {
+            filterParts.push(`tag:oneshot`);
+          }
+          if (currentFilters.fileType && currentFilters.fileType !== 'all') {
+            filterParts.push(`type:${currentFilters.fileType}`);
+          }
+          if (currentFilters.license === 'cc0') {
+            filterParts.push(`license:"Creative Commons 0"`);
+          } else if (currentFilters.license === 'ccby') {
+            filterParts.push(`license:"Attribution"`);
+          }
+          if (currentFilters.sampleRate.min || currentFilters.sampleRate.max) {
+            filterParts.push(`samplerate:[${currentFilters.sampleRate.min || '*'} TO ${currentFilters.sampleRate.max || '*'}]`);
+          }
+          if (currentFilters.channels && currentFilters.channels !== 'all') {
+            filterParts.push(`channels:${currentFilters.channels}`);
+          }
           if (filterParts.length > 0) {
             params.append('filter', filterParts.join(' '));
           }
@@ -166,6 +190,25 @@ export const useSoundStore = create<SoundStoreState>()(
           }
           if (filters.tonality) {
             filterParts.push(`ac_tonality:"${filters.tonality}"`);
+          }
+          if (filters.sampleType === 'loop') {
+            filterParts.push(`tag:loop`);
+          } else if (filters.sampleType === 'oneshot') {
+            filterParts.push(`tag:oneshot`);
+          }
+          if (filters.fileType && filters.fileType !== 'all') {
+            filterParts.push(`type:${filters.fileType}`);
+          }
+          if (filters.license === 'cc0') {
+            filterParts.push(`license:"Creative Commons 0"`);
+          } else if (filters.license === 'ccby') {
+            filterParts.push(`license:"Attribution"`);
+          }
+          if (filters.sampleRate.min || filters.sampleRate.max) {
+            filterParts.push(`samplerate:[${filters.sampleRate.min || '*'} TO ${filters.sampleRate.max || '*'}]`);
+          }
+          if (filters.channels && filters.channels !== 'all') {
+            filterParts.push(`channels:${filters.channels}`);
           }
           if (filterParts.length > 0) {
             params.append('filter', filterParts.join(' '));

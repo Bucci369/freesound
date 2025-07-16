@@ -48,15 +48,15 @@ const SampleCard: React.FC<SampleCardProps> = ({ sound }) => {
   };
 
   return (
-    <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-xl p-6 shadow-lg transition-all duration-300 hover:border-purple-500/50 hover:shadow-purple-500/10">
+    <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-xl p-6 shadow-lg transition-all duration-300 hover:border-purple-500/50 hover:shadow-purple-500/10 h-full flex flex-col">
       {/* Header Section mit Titel und Buttons */}
       <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 mb-4">
         {/* Sound-Titel und Autor */}
         <div className="flex-grow min-w-0 sm:pr-4">
-          <h3 className="text-lg sm:text-xl font-bold text-slate-100 break-words leading-tight mb-1" title={sound.name}>
+          <h3 className="text-lg sm:text-xl font-bold text-slate-100 leading-tight mb-1 h-12 overflow-hidden" title={sound.name}>
             {sound.name}
           </h3>
-          <p className="text-sm text-slate-400">by {sound.username}</p>
+          <p className="text-sm text-slate-400 truncate">by {sound.username}</p>
           {/* Zusätzliche Metadaten */}
           <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-1 text-xs text-slate-500">
             {sound.duration && <span>{formatDuration(sound.duration)}</span>}
@@ -112,7 +112,7 @@ const SampleCard: React.FC<SampleCardProps> = ({ sound }) => {
       </div>
 
       {/* Tags Sektion */}
-      <div className="flex flex-wrap items-center gap-2">
+      <div className="flex flex-wrap items-center gap-2 mt-auto">
         <Tag size={16} className="text-slate-500" />
         {sound.tags.slice(0, 5).map((tag) => ( // Zeigt maximal 5 Tags an
           <span
