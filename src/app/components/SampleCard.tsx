@@ -92,10 +92,7 @@ const SampleCard: React.FC<SampleCardProps> = ({ sound }) => {
       </div>
 
       <div className="mb-5">
-        <WaveformPlayer 
-          audioUrl={sound.previews['preview-hq-mp3']} 
-          waveformUrl={sound.images?.waveform_m || ''} 
-        />
+        <WaveformPlayer audioUrl={sound.previews['preview-hq-mp3']} />
       </div>
 
       {/* BPM and Key Info */}
