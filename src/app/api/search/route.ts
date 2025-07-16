@@ -53,7 +53,7 @@ export async function GET(request: NextRequest): Promise<NextResponse<FreesoundR
     'ac_dynamic_range', 'ac_zero_crossing_rate', 'ac_spectral_centroid'
   ].join(',');
 
-  let url = `https://freesound.org/apiv2/search/text/?query=${encodeURIComponent(query)}&page=${pageNumber}&page_size=150&fields=${fields}`;
+  let url = `https://freesound.org/apiv2/search/text/?query=${encodeURIComponent(query)}&page=${pageNumber}&page_size=15&fields=${fields}`;
 
   if (filter && filter.trim() !== '') {
     url += `&filter=${encodeURIComponent(filter)}`;
