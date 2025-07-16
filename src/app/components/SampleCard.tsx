@@ -34,6 +34,53 @@ const SampleCard: React.FC<SampleCardProps> = ({ sound }) => {
     }
   };
 
+  const handleDownloadClick = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    if (!user) {
+      window.location.href = '/api/auth/login';
+      return;
+    }
+    
+    console.log('Starting download for sound:', sound.id);
+    
+    try {
+      const response = await fetch(`/api/download/${sound.id}`);
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error('Download error:', errorData);
+        
+        if (response.status === 401) {
+          alert('Please login with Freesound first to download files.');
+          window.location.href = '/api/auth/login';
+          return;
+        }
+        
+        alert(`Download failed: ${errorData.error || 'Unknown error'}`);
+        return;
+      }
+      
+      // Download successful, handle as blob
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${sound.name}.${sound.type}`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+      
+      console.log('Download completed successfully');
+      
+    } catch (error) {
+      console.error('Download error:', error);
+      alert('Download failed. Please try again.');
+    }
+  };
+
   const formatDuration = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
     const secs = Math.floor(seconds % 60);
@@ -48,7 +95,9 @@ const SampleCard: React.FC<SampleCardProps> = ({ sound }) => {
   };
 
   return (
-    <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-xl p-6 shadow-lg transition-all duration-300 hover:border-purple-500/50 hover:shadow-purple-500/10 h-full flex flex-col">
+    <div 
+      className="bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-xl p-6 shadow-lg transition-all duration-300 hover:border-purple-500/50 hover:shadow-purple-500/10 h-full flex flex-col"
+    >
       {/* Header Section mit Titel und Buttons */}
       <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 mb-4">
         {/* Sound-Titel und Autor */}
@@ -80,14 +129,28 @@ const SampleCard: React.FC<SampleCardProps> = ({ sound }) => {
             <Heart size={16} fill={isFavorite(sound.id) ? 'currentColor' : 'none'} />
           </button>
           
-          <Link
-            href={downloadUrl}
-            className="inline-flex items-center justify-center gap-2 bg-purple-600/80 backdrop-blur-sm text-white font-semibold py-2.5 px-4 rounded-lg shadow-md hover:bg-purple-700/80 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-75 text-sm whitespace-nowrap border border-purple-500/20"
-            title={user ? "HQ-Datei herunterladen" : "Anmelden, um HQ-Datei herunterzuladen"}
-          >
-            <Download size={16} />
-            Download
-          </Link>
+          
+          {user ? (
+            <button
+              onClick={handleDownloadClick}
+              className="inline-flex items-center justify-center gap-2 bg-purple-600/80 backdrop-blur-sm text-white font-semibold py-2.5 px-4 rounded-lg shadow-md hover:bg-purple-700/80 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-75 text-sm whitespace-nowrap border border-purple-500/20"
+              title="HQ-Datei herunterladen"
+              type="button"
+            >
+              <Download size={16} />
+              Download
+            </button>
+          ) : (
+            <button
+              onClick={() => window.location.href = '/api/auth/login'}
+              className="inline-flex items-center justify-center gap-2 bg-purple-600/80 backdrop-blur-sm text-white font-semibold py-2.5 px-4 rounded-lg shadow-md hover:bg-purple-700/80 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-75 text-sm whitespace-nowrap border border-purple-500/20"
+              title="Anmelden, um HQ-Datei herunterzuladen"
+              type="button"
+            >
+              <Download size={16} />
+              Download
+            </button>
+          )}
         </div>
       </div>
 

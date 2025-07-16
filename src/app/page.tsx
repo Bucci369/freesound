@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useCallback } from 'react';
+import React, { useEffect, useCallback, useState, useRef } from 'react';
 import { LoaderCircle } from 'lucide-react';
 import Image from 'next/image';
 import SampleCard from './components/SampleCard';
@@ -8,6 +8,7 @@ import FilterSidebar from './components/FilterSidebar';
 import AuthButton from './components/AuthButton';
 import SearchBar from './components/SearchBar';
 import { useSoundStore } from '@/store/useSoundStore';
+import { SoundData } from '@/types/sound';
 
 export default function HomePage() {
   const {
@@ -23,6 +24,7 @@ export default function HomePage() {
     fetchSounds,
     loadMoreSounds
   } = useSoundStore();
+
 
   // Trigger initial search when filters change
   useEffect(() => {
@@ -156,7 +158,10 @@ export default function HomePage() {
                   )}
                   <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
                     {results.map((sound) => (
-                      <SampleCard key={sound.id} sound={sound} />
+                      <SampleCard 
+                        key={sound.id} 
+                        sound={sound}
+                      />
                     ))}
                   </div>
                   
