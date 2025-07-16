@@ -13,18 +13,15 @@ const WaveformPlayer: React.FC<WaveformPlayerProps> = ({ audioUrl }) => {
   const [isPlaying, setIsPlaying] = useState(false);
 
   useEffect(() => {
+    let cleanup = false;
+    
     if (waveformRef.current) {
-      // Bereinige vorherige Instanz
+      // Bereinige vorherige Instanz OHNE destroy
       if (wavesurfer.current) {
-        try {
-          wavesurfer.current.destroy();
-        } catch (error) {
-          // Ignore all errors including AbortError
-        }
         wavesurfer.current = null;
       }
 
-      wavesurfer.current = WaveSurfer.create({
+      const ws = WaveSurfer.create({
         container: waveformRef.current,
         waveColor: '#A855F7',
         progressColor: '#6D28D9',
@@ -32,20 +29,26 @@ const WaveformPlayer: React.FC<WaveformPlayerProps> = ({ audioUrl }) => {
         barWidth: 2,
       });
 
-      wavesurfer.current.load(audioUrl);
+      ws.load(audioUrl);
 
-      wavesurfer.current.on('play', () => setIsPlaying(true));
-      wavesurfer.current.on('pause', () => setIsPlaying(false));
+      ws.on('play', () => {
+        if (!cleanup) setIsPlaying(true);
+      });
+      ws.on('pause', () => {
+        if (!cleanup) setIsPlaying(false);
+      });
+
+      wavesurfer.current = ws;
 
       return () => {
-        if (wavesurfer.current) {
+        cleanup = true;
+        // Nur pause, KEIN destroy
+        if (ws) {
           try {
-            wavesurfer.current.pause();
-            wavesurfer.current.destroy();
+            ws.pause();
           } catch (error) {
-            // Ignore all cleanup errors
+            // Ignore
           }
-          wavesurfer.current = null;
         }
       };
     }
@@ -58,7 +61,7 @@ const WaveformPlayer: React.FC<WaveformPlayerProps> = ({ audioUrl }) => {
   return (
     <div>
       <div ref={waveformRef} />
-      <button onClick={handlePlayPause} className="bg-purple-600 text-white font-semibold py-1 px-4 rounded-full mt-2 text-sm hover:bg-purple-700 transition-colors duration-200">
+      <button onClick={handlePlayPause} className="bg-purple-600/80 backdrop-blur-sm text-white font-semibold py-1 px-4 rounded-full mt-2 text-sm hover:bg-purple-700/80 transition-all duration-200 border border-purple-500/20">
         {isPlaying ? 'Pause' : 'Abspielen'}
       </button>
     </div>

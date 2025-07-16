@@ -131,7 +131,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
         <button
           type="submit"
           disabled={isLoading || !localQuery.trim()}
-          className="flex-shrink-0 bg-purple-600 text-white font-semibold py-3 px-8 rounded-full shadow-md hover:bg-purple-700 transition-colors duration-200 disabled:bg-slate-600 disabled:cursor-not-allowed min-w-[100px] flex items-center justify-center"
+          className="flex-shrink-0 bg-purple-600/80 backdrop-blur-sm text-white font-semibold py-3 px-8 rounded-full shadow-md hover:bg-purple-700/80 transition-all duration-200 disabled:bg-slate-600 disabled:cursor-not-allowed min-w-[100px] flex items-center justify-center border border-purple-500/20"
         >
           {isLoading ? (
             <LoaderCircle className="animate-spin" size={20} />

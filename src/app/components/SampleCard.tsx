@@ -82,7 +82,7 @@ const SampleCard: React.FC<SampleCardProps> = ({ sound }) => {
           
           <Link
             href={downloadUrl}
-            className="inline-flex items-center justify-center gap-2 bg-purple-600 text-white font-semibold py-2.5 px-4 rounded-lg shadow-md hover:bg-purple-700 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-75 text-sm whitespace-nowrap"
+            className="inline-flex items-center justify-center gap-2 bg-purple-600/80 backdrop-blur-sm text-white font-semibold py-2.5 px-4 rounded-lg shadow-md hover:bg-purple-700/80 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-75 text-sm whitespace-nowrap border border-purple-500/20"
             title={user ? "HQ-Datei herunterladen" : "Anmelden, um HQ-Datei herunterzuladen"}
           >
             <Download size={16} />

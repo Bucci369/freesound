@@ -137,7 +137,7 @@ export default function HomePage() {
                         <button
                           onClick={handleLoadMore}
                           disabled={isLoading}
-                          className="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors disabled:bg-slate-600 disabled:cursor-not-allowed flex items-center gap-2"
+                          className="bg-purple-600/80 backdrop-blur-sm text-white px-4 py-2 rounded-lg hover:bg-purple-700/80 transition-all disabled:bg-slate-600 disabled:cursor-not-allowed flex items-center gap-2 border border-purple-500/20"
                         >
                           {isLoading ? (
                             <>
@@ -163,7 +163,7 @@ export default function HomePage() {
                       <button
                         onClick={handleLoadMore}
                         disabled={isLoading}
-                        className="bg-purple-600 text-white font-semibold py-3 px-8 rounded-full shadow-md hover:bg-purple-700 transition-colors disabled:bg-slate-600 disabled:cursor-not-allowed flex items-center gap-2"
+                        className="bg-purple-600/80 backdrop-blur-sm text-white font-semibold py-3 px-8 rounded-full shadow-md hover:bg-purple-700/80 transition-all disabled:bg-slate-600 disabled:cursor-not-allowed flex items-center gap-2 border border-purple-500/20"
                       >
                         {isLoading ? (
                           <>
