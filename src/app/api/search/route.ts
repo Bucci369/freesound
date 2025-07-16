@@ -1,5 +1,11 @@
-import { type NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { FreesoundResponse, FreesoundError } from '@/types/sound';
+
+interface SearchParams {
+  query: string;
+  filter?: string;
+  page?: string;
+}
 
 interface ApiErrorResponse {
   error: string;
@@ -7,7 +13,7 @@ interface ApiErrorResponse {
 }
 
 export async function GET(request: NextRequest): Promise<NextResponse<FreesoundResponse | ApiErrorResponse>> {
-  const { searchParams } = new URL(request.url);
+  const searchParams = request.nextUrl.searchParams;
   const query = searchParams.get('query');
   const filter = searchParams.get('filter');
   const page = searchParams.get('page') || '1';

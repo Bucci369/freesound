@@ -2,13 +2,10 @@ import { createClient } from '@/lib/supabase/server';
 import { NextResponse } from 'next/server';
 
 export async function GET(
-  request: NextRequest,
+  request: Request,
   { params }: { params: { soundId: string } }
 ) {
   const supabase = await createClient();
-  if (!supabase) {
-    return new Response('Internal server error: Supabase client not initialized.', { status: 500 });
-  }
   const { data: { user } } = await supabase.auth.getUser();
 
   if (!user) {
@@ -27,6 +24,7 @@ export async function GET(
     return new Response('Could not retrieve Freesound token.', { status: 500 });
   }
 
+  const soundId = params.soundId;
   const accessToken = profile.access_token;
 
   // Fetch the original download URL from Freesound
