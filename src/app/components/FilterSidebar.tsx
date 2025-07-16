@@ -2,20 +2,12 @@
 
 import React from 'react';
 import { SlidersHorizontal } from 'lucide-react';
+import { SearchFilters } from '@/types/sound';
 
 interface FilterSidebarProps {
-  filters: {
-    duration: { min: string; max: string };
-    tonality: string;
-    tempo: { min: string; max: string };
-    sampleType: string;
-    fileType: string;
-    license: string;
-    sampleRate: { min: string; max: string };
-    channels: string;
-  };
+  filters: SearchFilters;
   onFilterChange: (
-    filterName: string,
+    filterName: keyof SearchFilters,
     value: string | { min: string; max: string }
   ) => void;
 }
@@ -24,11 +16,10 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({ filters, onFilterChange }
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     const [category, subCategory] = name.split('.');
-    
     if (category === 'duration' || category === 'tempo' || category === 'sampleRate') {
-      onFilterChange(category, { ...filters[category], [subCategory]: value });
+      onFilterChange(category as keyof SearchFilters, { ...filters[category as keyof SearchFilters] as { min: string; max: string }, [subCategory]: value });
     } else {
-      onFilterChange(name, value);
+      onFilterChange(name as keyof SearchFilters, value);
     }
   };
 
