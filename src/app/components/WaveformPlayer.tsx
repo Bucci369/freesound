@@ -46,9 +46,9 @@ const WaveformPlayer: React.FC<WaveformPlayerProps> = ({ audioUrl }) => {
         if (ws) {
           try {
             ws.pause();
-          } catch (error: any) {
+          } catch (error) {
             // Ignore
-            console.error(error.message);
+            console.error((error as Error).message);
           }
         }
       };
