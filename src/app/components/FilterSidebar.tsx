@@ -14,7 +14,10 @@ interface FilterSidebarProps {
     sampleRate: { min: string; max: string };
     channels: string;
   };
-  onFilterChange: (filterName: string, value: any) => void;
+  onFilterChange: (
+    filterName: string,
+    value: string | { min: string; max: string }
+  ) => void;
 }
 
 const FilterSidebar: React.FC<FilterSidebarProps> = ({ filters, onFilterChange }) => {

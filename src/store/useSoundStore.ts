@@ -6,7 +6,10 @@ interface SoundStoreState extends SearchState {
   // Search actions
   setQuery: (query: string) => void;
   setFilters: (filters: SearchFilters) => void;
-  updateFilter: (filterName: keyof SearchFilters, value: any) => void;
+  updateFilter: (
+    filterName: keyof SearchFilters,
+    value: string | { min: string; max: string }
+  ) => void;
   resetSearch: () => void;
   
   // Fetch actions
@@ -63,7 +66,10 @@ export const useSoundStore = create<SoundStoreState>()(
         set({ filters });
       },
 
-      updateFilter: (filterName: keyof SearchFilters, value: any) => {
+      updateFilter: (
+        filterName: keyof SearchFilters,
+        value: string | { min: string; max: string }
+      ) => {
         set(state => ({
           filters: {
             ...state.filters,

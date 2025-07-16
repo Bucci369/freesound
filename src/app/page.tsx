@@ -45,7 +45,10 @@ export default function HomePage() {
     }
   }, [filters, query, fetchSounds]);
 
-  const handleFilterChange = (filterName: string, value: any) => {
+  const handleFilterChange = (
+    filterName: string,
+    value: string | { min: string; max: string }
+  ) => {
     updateFilter(filterName as keyof typeof filters, value);
   };
 
