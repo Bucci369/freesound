@@ -130,7 +130,7 @@ export default function HomePage() {
               ) : error ? (
                 <p className="text-center text-red-400 bg-red-900/20 p-4 rounded-lg">{error}</p>
               ) : hasSearched && results.length === 0 ? (
-                <p className="text-center text-slate-400">Keine Ergebnisse für &quot;{query}&quot; mit den gewählten Filtern gefunden.</p>
+                <p className="text-center text-slate-400">Keine Ergebnisse für "{query}" mit den gewählten Filtern gefunden.</p>
               ) : (
                 <>
                   {hasSearched && (
