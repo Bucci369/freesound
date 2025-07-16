@@ -24,7 +24,7 @@ export default function AuthButton() {
   }
 
   return (
-    <Link href="/api/auth/login" className="bg-purple-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-purple-700 transition-colors duration-200">
+    <Link href="/api/auth/login" className="bg-purple-600/80 backdrop-blur-sm text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-purple-700/80 transition-all duration-200 border border-purple-500/20">
       Anmelden mit Freesound
     </Link>
   )
