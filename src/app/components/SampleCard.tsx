@@ -34,22 +34,44 @@ const SampleCard: React.FC<SampleCardProps> = ({ sound }) => {
     }
   };
 
-  const handleDownloadClick = async (e: React.MouseEvent) => {
+  const handleDownloadClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     e.stopPropagation();
     
+    console.log('Download button clicked for sound:', sound.id);
+    console.log('User:', user);
+    
     if (!user) {
+      console.log('No user, redirecting to login');
       window.location.href = '/api/auth/login';
       return;
     }
     
     console.log('Starting download for sound:', sound.id);
     
+    // Disable button during download
+    const button = e.currentTarget;
+    button.disabled = true;
+    button.textContent = 'Downloading...';
+    
     try {
-      const response = await fetch(`/api/download/${sound.id}`);
+      const response = await fetch(`/api/download/${sound.id}`, {
+        method: 'GET',
+        headers: {
+          'Accept': 'application/octet-stream'
+        }
+      });
+      
+      console.log('Download response status:', response.status);
+      console.log('Download response headers:', response.headers);
       
       if (!response.ok) {
-        const errorData = await response.json();
+        let errorData;
+        try {
+          errorData = await response.json();
+        } catch {
+          errorData = { error: `HTTP ${response.status}: ${response.statusText}` };
+        }
         console.error('Download error:', errorData);
         
         if (response.status === 401) {
@@ -64,20 +86,31 @@ const SampleCard: React.FC<SampleCardProps> = ({ sound }) => {
       
       // Download successful, handle as blob
       const blob = await response.blob();
+      console.log('Blob created:', blob.size, 'bytes');
+      
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
       a.download = `${sound.name}.${sound.type}`;
+      a.style.display = 'none';
       document.body.appendChild(a);
       a.click();
-      window.URL.revokeObjectURL(url);
-      document.body.removeChild(a);
+      
+      // Cleanup
+      setTimeout(() => {
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+      }, 100);
       
       console.log('Download completed successfully');
       
     } catch (error) {
       console.error('Download error:', error);
       alert('Download failed. Please try again.');
+    } finally {
+      // Re-enable button
+      button.disabled = false;
+      button.innerHTML = '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3M3 17V7a2 2 0 0 1 2-2h6l2 2h6a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>Download';
     }
   };
 
@@ -131,18 +164,26 @@ const SampleCard: React.FC<SampleCardProps> = ({ sound }) => {
           
           
           {user ? (
-            <button
-              onClick={handleDownloadClick}
+            <a
+              href={`/api/download/${sound.id}`}
+              download={`${sound.name}.${sound.type}`}
               className="inline-flex items-center justify-center gap-2 bg-purple-600/80 backdrop-blur-sm text-white font-semibold py-2.5 px-4 rounded-lg shadow-md hover:bg-purple-700/80 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-75 text-sm whitespace-nowrap border border-purple-500/20"
               title="HQ-Datei herunterladen"
-              type="button"
+              onClick={(e) => {
+                console.log('Download link clicked for sound:', sound.id);
+                // Let the browser handle the download naturally
+              }}
             >
               <Download size={16} />
               Download
-            </button>
+            </a>
           ) : (
             <button
-              onClick={() => window.location.href = '/api/auth/login'}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                window.location.href = '/api/auth/login';
+              }}
               className="inline-flex items-center justify-center gap-2 bg-purple-600/80 backdrop-blur-sm text-white font-semibold py-2.5 px-4 rounded-lg shadow-md hover:bg-purple-700/80 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-75 text-sm whitespace-nowrap border border-purple-500/20"
               title="Anmelden, um HQ-Datei herunterzuladen"
               type="button"

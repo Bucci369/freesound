@@ -6,7 +6,15 @@ export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url);
   const code = searchParams.get('code');
 
+  console.log('Callback route called with code:', code);
+  console.log('Origin:', origin);
+  console.log('Environment variables check:');
+  console.log('CLIENT_ID:', !!process.env.NEXT_PUBLIC_FREESOUND_CLIENT_ID);
+  console.log('CLIENT_SECRET:', !!process.env.FREESOUND_CLIENT_SECRET);
+  console.log('SITE_URL:', process.env.NEXT_PUBLIC_SITE_URL);
+
   const redirectToError = (message: string) => {
+    console.error('Redirecting to error:', message);
     return NextResponse.redirect(`${origin}/auth/auth-error?message=${encodeURIComponent(message)}`);
   };
 
@@ -18,6 +26,15 @@ export async function GET(request: Request) {
     const clientId = process.env.NEXT_PUBLIC_FREESOUND_CLIENT_ID;
     const clientSecret = process.env.FREESOUND_CLIENT_SECRET;
     const redirectUri = `${process.env.NEXT_PUBLIC_SITE_URL}/api/auth/callback`;
+
+    console.log('Token exchange params:', {
+      clientId: clientId?.substring(0, 10) + '...',
+      clientSecret: clientSecret?.substring(0, 10) + '...',
+      clientIdLength: clientId?.length,
+      clientSecretLength: clientSecret?.length,
+      redirectUri,
+      code: code?.substring(0, 10) + '...'
+    });
 
     // 1. Exchange code for an access token
     const tokenResponse = await fetch('https://freesound.org/apiv2/oauth2/access_token/', {
@@ -33,8 +50,12 @@ export async function GET(request: Request) {
     });
 
     const tokenData = await tokenResponse.json();
+    console.log('Token response status:', tokenResponse.status);
+    console.log('Token response data:', tokenData);
+    
     if (!tokenResponse.ok) {
-      return redirectToError(`Fehler beim Austausch des Tokens: ${tokenData.error_description || 'Unbekannter Fehler'}`);
+      console.error('Token exchange failed:', tokenData);
+      return redirectToError(`Fehler beim Austausch des Tokens: ${tokenData.error_description || tokenData.error || 'Unbekannter Fehler'}`);
     }
 
     const { access_token, refresh_token } = tokenData;
