@@ -87,7 +87,7 @@ export default function HomePage() {
                 alt="Music Studio" 
                 width={1920}
                 height={600}
-                className="w-full h-[300px] sm:h-[400px] lg:h-[500px] object-cover object-top"
+                className="w-full h-[300px] sm:h-[400px] lg:h-[500px] object-cover object-[50%_55%]"
                 priority
               />
             </picture>

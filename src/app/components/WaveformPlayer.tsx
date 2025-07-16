@@ -14,6 +14,16 @@ const WaveformPlayer: React.FC<WaveformPlayerProps> = ({ audioUrl }) => {
 
   useEffect(() => {
     if (waveformRef.current) {
+      // Bereinige vorherige Instanz
+      if (wavesurfer.current) {
+        try {
+          wavesurfer.current.destroy();
+        } catch (error) {
+          // Ignore all errors including AbortError
+        }
+        wavesurfer.current = null;
+      }
+
       wavesurfer.current = WaveSurfer.create({
         container: waveformRef.current,
         waveColor: '#A855F7',
@@ -30,9 +40,10 @@ const WaveformPlayer: React.FC<WaveformPlayerProps> = ({ audioUrl }) => {
       return () => {
         if (wavesurfer.current) {
           try {
+            wavesurfer.current.pause();
             wavesurfer.current.destroy();
           } catch (error) {
-            // Ignore AbortError
+            // Ignore all cleanup errors
           }
           wavesurfer.current = null;
         }
