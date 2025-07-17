@@ -39,7 +39,11 @@ export default function AuthButton() {
   }
 
   return (
-    <button onClick={handleLogin} className="bg-purple-600/80 backdrop-blur-sm text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-purple-700/80 transition-all duration-200 border border-purple-500/20">
+    <button 
+      onClick={handleLogin} 
+      className="bg-purple-600/80 backdrop-blur-sm text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-purple-700/80 transition-all duration-200 border border-purple-500/20"
+      type="button"
+    >
       Anmelden mit Freesound
     </button>
   )
