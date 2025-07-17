@@ -21,11 +21,23 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     const supabase = createClient();
 
+    // Zuerst die aktuelle Session laden
+    const getSession = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      console.log('Aktuelle Session:', session);
+      setUser(session?.user ?? null);
+      setLoading(false);
+    };
+
+    // Session beim Start laden
+    getSession();
+
     // onAuthStateChange feuert sofort mit dem aktuellen Status
     // und lauscht dann auf zukünftige Änderungen. Dies behandelt den
     // initialen Ladevorgang und Echtzeit-Updates.
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       console.log(`Auth-Ereignis: ${event}`); // Zum Debuggen hinzugefügt
+      console.log('Session:', session);
       setUser(session?.user ?? null);
       setLoading(false);
     });
