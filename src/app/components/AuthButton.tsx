@@ -11,8 +11,15 @@ export default function AuthButton() {
     const redirectUri = `${process.env.NEXT_PUBLIC_SITE_URL}/api/auth/callback`;
     const authUrl = `https://freesound.org/apiv2/oauth2/authorize/?client_id=${clientId}&response_type=code&redirect_uri=${redirectUri}`;
     
+    console.log('Login button clicked!');
+    console.log('Client ID:', clientId);
+    console.log('Redirect URI:', redirectUri);
+    console.log('Auth URL:', authUrl);
+    
     window.location.href = authUrl;
   };
+
+  console.log('AuthButton render:', { user: !!user, loading });
 
   if (loading) {
     return <div className="w-[200px] h-[40px] bg-slate-700 rounded-lg animate-pulse"></div>;

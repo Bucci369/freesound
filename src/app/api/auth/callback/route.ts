@@ -6,8 +6,10 @@ export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url);
   const code = searchParams.get('code');
 
+  console.log('=== CALLBACK ROUTE STARTED ===');
   console.log('Callback route called with code:', code);
   console.log('Origin:', origin);
+  console.log('Full URL:', request.url);
   console.log('Environment variables check:');
   console.log('CLIENT_ID:', !!process.env.NEXT_PUBLIC_FREESOUND_CLIENT_ID);
   console.log('CLIENT_SECRET:', !!process.env.FREESOUND_CLIENT_SECRET);
@@ -110,14 +112,20 @@ export async function GET(request: Request) {
     if (profileError) throw profileError;
 
     // 5. Generate Magic Link for session creation
+    console.log('Generating magic link for user:', user.email);
     const { data: linkData, error: linkError } = await supabase.auth.admin.generateLink({
       type: 'magiclink',
       email: user.email!,
       options: { redirectTo: origin },
     });
 
-    if (linkError) throw linkError;
+    if (linkError) {
+      console.error('Magic link generation error:', linkError);
+      throw linkError;
+    }
 
+    console.log('Magic link generated successfully');
+    console.log('Redirecting to:', linkData.properties.action_link);
     return NextResponse.redirect(linkData.properties.action_link);
 
   } catch (error) {
