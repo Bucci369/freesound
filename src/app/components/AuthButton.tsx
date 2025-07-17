@@ -6,6 +6,14 @@ import Link from 'next/link'
 export default function AuthButton() {
   const { user, loading } = useUser();
 
+  const handleLogin = () => {
+    const clientId = process.env.NEXT_PUBLIC_FREESOUND_CLIENT_ID;
+    const redirectUri = `${process.env.NEXT_PUBLIC_SITE_URL}/api/auth/callback`;
+    const authUrl = `https://freesound.org/apiv2/oauth2/authorize/?client_id=${clientId}&response_type=code&redirect_uri=${redirectUri}`;
+    
+    window.location.href = authUrl;
+  };
+
   if (loading) {
     return <div className="w-[200px] h-[40px] bg-slate-700 rounded-lg animate-pulse"></div>;
   }
@@ -24,8 +32,8 @@ export default function AuthButton() {
   }
 
   return (
-    <Link href="/api/auth/login" className="bg-purple-600/80 backdrop-blur-sm text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-purple-700/80 transition-all duration-200 border border-purple-500/20">
+    <button onClick={handleLogin} className="bg-purple-600/80 backdrop-blur-sm text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-purple-700/80 transition-all duration-200 border border-purple-500/20">
       Anmelden mit Freesound
-    </Link>
+    </button>
   )
 }

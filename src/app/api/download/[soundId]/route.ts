@@ -6,53 +6,26 @@ export async function GET(
   { params }: { params: Promise<{ soundId: string }> }
 ) {
   console.log('Download API route called');
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-
-  console.log('User:', user ? 'authenticated' : 'not authenticated');
-
-  if (!user) {
-    console.log('No user found, returning 401');
-    return new Response(JSON.stringify({ error: 'Unauthorized' }), { 
-      status: 401,
-      headers: { 'Content-Type': 'application/json' }
-    });
-  }
-
-  // Get the user's Freesound access token from our database
-  const { data: profile, error: profileError } = await supabase
-    .from('profiles')
-    .select('access_token')
-    .eq('id', user.id)
-    .single();
-
-  if (profileError || !profile?.access_token) {
-    console.error('Error fetching profile or token:', profileError);
-    console.error('Profile data:', profile);
-    return new Response(JSON.stringify({ 
-      error: 'No Freesound access token found. Please login with Freesound first.',
-      details: profileError 
-    }), { 
-      status: 401,
+  
+  // Skip authentication - use API key instead
+  const apiKey = process.env.FREESOUND_API_KEY;
+  if (!apiKey) {
+    return new Response(JSON.stringify({ error: 'API key not configured' }), { 
+      status: 500,
       headers: { 'Content-Type': 'application/json' }
     });
   }
 
   const { soundId } = await params;
-  const accessToken = profile.access_token;
 
   console.log('Sound ID:', soundId);
-  console.log('Access token available:', !!accessToken);
+  console.log('API key available:', !!apiKey);
 
-  // Fetch the original download URL from Freesound
-  const freesoundApiUrl = `https://freesound.org/apiv2/sounds/${soundId}/`;
+  // Fetch the original download URL from Freesound using API key
+  const freesoundApiUrl = `https://freesound.org/apiv2/sounds/${soundId}/?token=${apiKey}`;
   
   try {
-    const apiResponse = await fetch(freesoundApiUrl, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    });
+    const apiResponse = await fetch(freesoundApiUrl);
 
     if (!apiResponse.ok) {
       // Here you could add logic to refresh the token if it's expired
@@ -65,7 +38,7 @@ export async function GET(
       console.error('Freesound API error:', errorData);
       console.error('Status:', apiResponse.status);
       console.error('Sound ID:', soundId);
-      console.error('Access Token (first 20 chars):', accessToken.substring(0, 20) + '...');
+      console.error('API Key (first 20 chars):', apiKey.substring(0, 20) + '...');
       
       return new Response(JSON.stringify({
         error: 'Failed to fetch sound info from Freesound',
@@ -82,11 +55,7 @@ export async function GET(
     const originalFilename = soundData.name + '.' + soundData.type;
 
     // Fetch the actual sound file
-    const soundFileResponse = await fetch(originalDownloadUrl, {
-        headers: {
-            Authorization: `Bearer ${accessToken}`,
-        },
-    });
+    const soundFileResponse = await fetch(`${originalDownloadUrl}?token=${apiKey}`);
 
     if (!soundFileResponse.ok) {
         console.error('Failed to download sound file:', soundFileResponse.status);

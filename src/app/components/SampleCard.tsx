@@ -43,7 +43,10 @@ const SampleCard: React.FC<SampleCardProps> = ({ sound }) => {
     
     if (!user) {
       console.log('No user, redirecting to login');
-      window.location.href = '/api/auth/login';
+      const clientId = process.env.NEXT_PUBLIC_FREESOUND_CLIENT_ID;
+      const redirectUri = `${process.env.NEXT_PUBLIC_SITE_URL}/api/auth/callback`;
+      const authUrl = `https://freesound.org/apiv2/oauth2/authorize/?client_id=${clientId}&response_type=code&redirect_uri=${redirectUri}`;
+      window.location.href = authUrl;
       return;
     }
     
@@ -163,35 +166,18 @@ const SampleCard: React.FC<SampleCardProps> = ({ sound }) => {
           </button>
           
           
-          {user ? (
-            <a
-              href={`/api/download/${sound.id}`}
-              download={`${sound.name}.${sound.type}`}
-              className="inline-flex items-center justify-center gap-2 bg-purple-600/80 backdrop-blur-sm text-white font-semibold py-2.5 px-4 rounded-lg shadow-md hover:bg-purple-700/80 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-75 text-sm whitespace-nowrap border border-purple-500/20"
-              title="HQ-Datei herunterladen"
-              onClick={(e) => {
-                console.log('Download link clicked for sound:', sound.id);
-                // Let the browser handle the download naturally
-              }}
-            >
-              <Download size={16} />
-              Download
-            </a>
-          ) : (
-            <button
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                window.location.href = '/api/auth/login';
-              }}
-              className="inline-flex items-center justify-center gap-2 bg-purple-600/80 backdrop-blur-sm text-white font-semibold py-2.5 px-4 rounded-lg shadow-md hover:bg-purple-700/80 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-75 text-sm whitespace-nowrap border border-purple-500/20"
-              title="Anmelden, um HQ-Datei herunterzuladen"
-              type="button"
-            >
-              <Download size={16} />
-              Download
-            </button>
-          )}
+          <a
+            href={`/api/download/${sound.id}`}
+            download={`${sound.name}.${sound.type}`}
+            className="inline-flex items-center justify-center gap-2 bg-purple-600/80 backdrop-blur-sm text-white font-semibold py-2.5 px-4 rounded-lg shadow-md hover:bg-purple-700/80 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-75 text-sm whitespace-nowrap border border-purple-500/20"
+            title="HQ-Datei herunterladen"
+            onClick={(e) => {
+              console.log('Download link clicked for sound:', sound.id);
+            }}
+          >
+            <Download size={16} />
+            Download
+          </a>
         </div>
       </div>
 
