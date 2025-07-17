@@ -15,6 +15,7 @@ export const UserContext = createContext<UserContextType | undefined>(undefined)
 
 // Erstellen der Provider-Komponente
 export const UserProvider = ({ children }: { children: ReactNode }) => {
+  console.log('UserProvider mounted');
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
